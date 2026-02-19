@@ -1,9 +1,7 @@
-import { useState } from 'react'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import ListTodoComponent from './components/ListTodoComponent'
 import HeaderComponent from './components/HeaderComponent'
 import FooterComponent from './components/FooterComponent'
-import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 import TodoComponent from './components/TodoComponent'
 import RegisterComponent from './components/RegisterComponent'
 import LoginComponent from './components/LoginComponent'
@@ -11,53 +9,58 @@ import { isUserLoggedIn } from './services/AuthService'
 
 function App() {
 
-  function AuthenticatedRoute({children}){
-
-    const isAuth = isUserLoggedIn();
-
-    if(isAuth) {
-      return children;
-    }
-
-    return <Navigate to="/" />
-
+  function AuthenticatedRoute({ children }) {
+    const isAuth = isUserLoggedIn()
+    return isAuth ? children : <Navigate to="/login" />
   }
 
   return (
-    <>
-    <BrowserRouter>
-        <HeaderComponent />
-          <Routes>
-              {/* http://localhost:8080 */}
-              <Route path='/' element = { <LoginComponent /> }></Route>
-               {/* http://localhost:8080/todos */}
-              <Route path='/todos' element = { 
-              <AuthenticatedRoute>
-                <ListTodoComponent />
-              </AuthenticatedRoute> 
-              }></Route>
-              {/* http://localhost:8080/add-todo */}
-              <Route path='/add-todo' element = { 
-                <AuthenticatedRoute>
-                <TodoComponent /> 
-                </AuthenticatedRoute>
-              }></Route>
-              {/* http://localhost:8080/update-todo/1 */}
-              <Route path='/update-todo/:id' element = { 
-              <AuthenticatedRoute>
-              <TodoComponent /> 
-              </AuthenticatedRoute>
-              }></Route>
-               {/* http://localhost:8080/register */}
-              <Route path='/register' element = { <RegisterComponent />}></Route>
+    <BrowserRouter basename="/api">
+      <HeaderComponent />
 
-               {/* http://localhost:8080/login */}
-               <Route path='/login' element = { <LoginComponent /> }></Route>
+      <Routes>
+        {/* /api */}
+        <Route path="/" element={<LoginComponent />} />
 
-          </Routes>
-        <FooterComponent />
-        </BrowserRouter>
-    </>
+        {/* /api/login */}
+        <Route path="/login" element={<LoginComponent />} />
+
+        {/* /api/register */}
+        <Route path="/register" element={<RegisterComponent />} />
+
+        {/* /api/todos */}
+        <Route
+          path="/todos"
+          element={
+            <AuthenticatedRoute>
+              <ListTodoComponent />
+            </AuthenticatedRoute>
+          }
+        />
+
+        {/* /api/add-todo */}
+        <Route
+          path="/add-todo"
+          element={
+            <AuthenticatedRoute>
+              <TodoComponent />
+            </AuthenticatedRoute>
+          }
+        />
+
+        {/* /api/update-todo/1 */}
+        <Route
+          path="/update-todo/:id"
+          element={
+            <AuthenticatedRoute>
+              <TodoComponent />
+            </AuthenticatedRoute>
+          }
+        />
+      </Routes>
+
+      <FooterComponent />
+    </BrowserRouter>
   )
 }
 
