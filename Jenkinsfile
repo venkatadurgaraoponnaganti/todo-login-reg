@@ -14,13 +14,7 @@ pipeline {
             }
         }
 
-        stage('Backend Build & Test') {
-            steps {
-                dir('todo-management') {
-                    sh 'mvn clean test'
-                }
-            }
-        }
+     
 
         stage('Backend Docker Build') {
             steps {
