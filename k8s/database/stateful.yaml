@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: dbstatefulset
+spec:
+  serviceName: dbservice
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo
+  volumeClaimTemplates:
+    - metadata:
+        name: volume
+      spec: 
+        accessModes: 
+          - ReadWriteOnce
+        storageClassName: gp2
+        resources:
+          requests:
+            storage: 5Gi
+  template:
+    metadata: 
+      labels:
+          app: todo
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: volume
+              mountPath: /var/lib/mysql
+          envFrom:
+            - secretRef:
+                name: dbsecret
+
+

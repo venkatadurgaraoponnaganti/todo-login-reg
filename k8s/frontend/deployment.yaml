@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fdeployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ftodo
+  template:
+    metadata:
+      labels:
+        app: ftodo
+    spec:
+      containers:
+        - name: frontend
+          image: pvdr8978/todo-frontend
+          ports:
+            - containerPort: 80
+

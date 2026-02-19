@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bdeployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: btodo
+  template:
+    metadata:
+      labels:
+        app: btodo
+    spec:
+      containers:
+        - name: backend
+          image: pvdr8978/todo-backend
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: bsecret
+
