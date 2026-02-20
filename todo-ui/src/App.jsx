@@ -5,6 +5,7 @@ import FooterComponent from './components/FooterComponent'
 import TodoComponent from './components/TodoComponent'
 import RegisterComponent from './components/RegisterComponent'
 import LoginComponent from './components/LoginComponent'
+import ErrorBoundary from './components/ErrorBoundary'
 import { isUserLoggedIn } from './services/AuthService'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
     <BrowserRouter>
       <HeaderComponent />
 
+      <ErrorBoundary>
       <Routes>
         {/* / */}
         <Route path="/" element={<LoginComponent />} />
@@ -58,6 +60,7 @@ function App() {
           }
         />
       </Routes>
+      </ErrorBoundary>
 
       <FooterComponent />
     </BrowserRouter>

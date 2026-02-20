@@ -87,7 +87,7 @@ const ListTodoComponent = () => {
                 </thead>
                 <tbody>
                     {
-                        todos.map(todo => 
+                        todos.filter((todo) => todo && typeof todo === 'object').map(todo => 
                             <tr key={todo.id}>
                                 <td>{todo.title}</td>
                                 <td>{todo.description}</td>
