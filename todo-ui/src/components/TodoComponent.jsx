@@ -73,7 +73,7 @@ const TodoComponent = () => {
                 <div className='card-body'>
                     {errorMessage && <div className='alert alert-danger'>{errorMessage}</div>}
 
-                    <form onSubmit={saveOrUpdateTodo}>
+                    <form>
                         <div className='form-group mb-2'>
                             <label className='form-label'>Todo Title:</label>
                             <input
