@@ -6,24 +6,33 @@ const LoginComponent = () => {
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
 
     const navigator = useNavigate();
+
+    function getErrorMessage(error, fallbackMessage){
+        const data = error?.response?.data
+
+        if(typeof data === 'string') return data
+        if(data && typeof data.message === 'string') return data.message
+
+        return fallbackMessage
+    }
 
     async function handleLoginForm(e){
 
         e.preventDefault();
 
-        await loginAPICall(username, password).then((response) => {
-            console.log(response.data);
+        setErrorMessage('')
 
+        await loginAPICall(username, password).then(() => {
             const token = 'Basic ' + window.btoa(username + ":" + password);
             storeToken(token);
 
             saveLoggedInUser(username);
             navigator("/todos")
-
-            window.location.reload(false);
         }).catch(error => {
+            setErrorMessage(getErrorMessage(error, 'Invalid username/email or password'))
             console.error(error);
         })
 
@@ -40,6 +49,8 @@ const LoginComponent = () => {
                     </div>
 
                     <div className='card-body'>
+                        {errorMessage && <div className='alert alert-danger'>{errorMessage}</div>}
+
                         <form>
 
                             <div className='row mb-3'>
