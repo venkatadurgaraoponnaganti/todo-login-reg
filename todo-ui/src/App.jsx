@@ -5,6 +5,7 @@ import FooterComponent from './components/FooterComponent'
 import TodoComponent from './components/TodoComponent'
 import RegisterComponent from './components/RegisterComponent'
 import LoginComponent from './components/LoginComponent'
+import ErrorBoundary from './components/ErrorBoundary'
 import { isUserLoggedIn } from './services/AuthService'
 
 function App() {
@@ -15,20 +16,21 @@ function App() {
   }
 
   return (
-    <BrowserRouter basename="/api">
+    <BrowserRouter>
       <HeaderComponent />
 
+      <ErrorBoundary>
       <Routes>
-        {/* /api */}
+        {/* / */}
         <Route path="/" element={<LoginComponent />} />
 
-        {/* /api/login */}
+        {/* /login */}
         <Route path="/login" element={<LoginComponent />} />
 
-        {/* /api/register */}
+        {/* /register */}
         <Route path="/register" element={<RegisterComponent />} />
 
-        {/* /api/todos */}
+        {/* /todos */}
         <Route
           path="/todos"
           element={
@@ -38,7 +40,7 @@ function App() {
           }
         />
 
-        {/* /api/add-todo */}
+        {/* /add-todo */}
         <Route
           path="/add-todo"
           element={
@@ -48,7 +50,7 @@ function App() {
           }
         />
 
-        {/* /api/update-todo/1 */}
+        {/* /update-todo/1 */}
         <Route
           path="/update-todo/:id"
           element={
@@ -58,6 +60,7 @@ function App() {
           }
         />
       </Routes>
+      </ErrorBoundary>
 
       <FooterComponent />
     </BrowserRouter>
