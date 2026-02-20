@@ -43,6 +43,8 @@ const RegisterComponent = () => {
             }, 1200)
         }).catch(error => {
             setErrorMessage(getErrorMessage(error, 'Registration failed. Please try with different username/email.'))
+            const backendMessage = error?.response?.data?.message || error?.response?.data
+            setErrorMessage(backendMessage || 'Registration failed. Please try with different username/email.')
             console.error(error);
         })
     }

@@ -35,6 +35,8 @@ const TodoComponent = () => {
                 navigate('/todos')
             }).catch(error => {
                 setErrorMessage(getErrorMessage(error, 'Unable to update todo. Please try again.'))
+                const backendMessage = error?.response?.data?.message || error?.response?.data
+                setErrorMessage(backendMessage || 'Unable to update todo. Please try again.')
                 console.error(error);
             })
 
@@ -43,6 +45,8 @@ const TodoComponent = () => {
                 navigate('/todos')
             }).catch(error => {
                 setErrorMessage(getErrorMessage(error, 'Unable to save todo. Please try again.'))
+                const backendMessage = error?.response?.data?.message || error?.response?.data
+                setErrorMessage(backendMessage || 'Unable to save todo. Please try again.')
                 console.error(error);
             })
         }
@@ -81,6 +85,7 @@ const TodoComponent = () => {
                     {errorMessage && <div className='alert alert-danger'>{errorMessage}</div>}
 
                     <form onSubmit={saveOrUpdateTodo}>
+                    <form>
                         <div className='form-group mb-2'>
                             <label className='form-label'>Todo Title:</label>
                             <input

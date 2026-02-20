@@ -29,6 +29,8 @@ const ListTodoComponent = () => {
             setTodos(Array.isArray(response.data) ? response.data : [])
         }).catch(error => {
             setErrorMessage(getErrorMessage(error, 'Unable to load todos. Please login again.'))
+            const backendMessage = error?.response?.data?.message || error?.response?.data
+            setErrorMessage(backendMessage || 'Unable to load todos. Please login again.')
             setTodos([])
             console.error(error);
         })
