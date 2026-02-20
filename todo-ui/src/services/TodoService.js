@@ -1,7 +1,8 @@
 import axios from "axios";
 import { getToken } from "./AuthService";
 
-const BASE_REST_API_URL = '/api/todos';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+const BASE_REST_API_URL = `${API_BASE}/todos`;
 
 // export function getAllTodos(){
 //     return axios.get(BASE_REST_API_URL);

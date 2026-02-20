@@ -19,16 +19,16 @@ function App() {
       <HeaderComponent />
 
       <Routes>
-        {/* /api */}
+        {/* / */}
         <Route path="/" element={<LoginComponent />} />
 
-        {/* /api/login */}
+        {/* /login */}
         <Route path="/login" element={<LoginComponent />} />
 
-        {/* /api/register */}
+        {/* /register */}
         <Route path="/register" element={<RegisterComponent />} />
 
-        {/* /api/todos */}
+        {/* /todos */}
         <Route
           path="/todos"
           element={
@@ -38,7 +38,7 @@ function App() {
           }
         />
 
-        {/* /api/add-todo */}
+        {/* /add-todo */}
         <Route
           path="/add-todo"
           element={
@@ -48,7 +48,7 @@ function App() {
           }
         />
 
-        {/* /api/update-todo/1 */}
+        {/* /update-todo/1 */}
         <Route
           path="/update-todo/:id"
           element={
