@@ -12,6 +12,15 @@ const TodoComponent = () => {
     const navigate = useNavigate()
     const { id } = useParams()
 
+    function getErrorMessage(error, fallbackMessage){
+        const data = error?.response?.data
+
+        if(typeof data === 'string') return data
+        if(data && typeof data.message === 'string') return data.message
+
+        return fallbackMessage
+    }
+
 
     function saveOrUpdateTodo(e){
         e.preventDefault()
@@ -25,6 +34,7 @@ const TodoComponent = () => {
             updateTodo(id, todo).then(() => {
                 navigate('/todos')
             }).catch(error => {
+                setErrorMessage(getErrorMessage(error, 'Unable to update todo. Please try again.'))
                 const backendMessage = error?.response?.data?.message || error?.response?.data
                 setErrorMessage(backendMessage || 'Unable to update todo. Please try again.')
                 console.error(error);
@@ -34,6 +44,7 @@ const TodoComponent = () => {
             saveTodo(todo).then(() => {
                 navigate('/todos')
             }).catch(error => {
+                setErrorMessage(getErrorMessage(error, 'Unable to save todo. Please try again.'))
                 const backendMessage = error?.response?.data?.message || error?.response?.data
                 setErrorMessage(backendMessage || 'Unable to save todo. Please try again.')
                 console.error(error);
@@ -73,6 +84,7 @@ const TodoComponent = () => {
                 <div className='card-body'>
                     {errorMessage && <div className='alert alert-danger'>{errorMessage}</div>}
 
+                    <form onSubmit={saveOrUpdateTodo}>
                     <form>
                         <div className='form-group mb-2'>
                             <label className='form-label'>Todo Title:</label>

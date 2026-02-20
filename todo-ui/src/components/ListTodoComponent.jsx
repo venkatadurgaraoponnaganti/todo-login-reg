@@ -9,6 +9,14 @@ const ListTodoComponent = () => {
 
     const navigate = useNavigate()
 
+    function getErrorMessage(error, fallbackMessage){
+        const data = error?.response?.data
+
+        if(typeof data === 'string') return data
+        if(data && typeof data.message === 'string') return data.message
+
+        return fallbackMessage
+    }
 
     useEffect(() => {
         listTodos();
@@ -20,6 +28,7 @@ const ListTodoComponent = () => {
         getAllTodos().then((response) => {
             setTodos(Array.isArray(response.data) ? response.data : [])
         }).catch(error => {
+            setErrorMessage(getErrorMessage(error, 'Unable to load todos. Please login again.'))
             const backendMessage = error?.response?.data?.message || error?.response?.data
             setErrorMessage(backendMessage || 'Unable to load todos. Please login again.')
             setTodos([])
