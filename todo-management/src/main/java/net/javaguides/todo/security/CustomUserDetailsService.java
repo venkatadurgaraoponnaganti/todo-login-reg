@@ -42,4 +42,13 @@ public class CustomUserDetailsService implements UserDetailsService {
                 authorities
         );
     }
+
+    private String toSpringRoleName(String roleName) {
+        if (roleName == null || roleName.isBlank()) {
+            return "ROLE_USER";
+        }
+
+        String normalized = roleName.trim().toUpperCase(Locale.ROOT);
+        return normalized.startsWith("ROLE_") ? normalized : "ROLE_" + normalized;
+    }
 }
