@@ -33,7 +33,6 @@ const LoginComponent = () => {
             navigator("/todos")
         }).catch(error => {
             setErrorMessage(getErrorMessage(error, 'Invalid username/email or password'))
-            setErrorMessage('Invalid username/email or password')
             console.error(error);
         })
 
