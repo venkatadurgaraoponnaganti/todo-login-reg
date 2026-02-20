@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { registerAPICall } from '../services/AuthService'
+import { useNavigate } from 'react-router-dom'
 
 const RegisterComponent = () => {
 
@@ -7,19 +8,41 @@ const RegisterComponent = () => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    
+    const [errorMessage, setErrorMessage] = useState('')
+    const [successMessage, setSuccessMessage] = useState('')
+
+    const navigator = useNavigate()
+
+    function getErrorMessage(error, fallbackMessage){
+        const data = error?.response?.data
+
+        if(typeof data === 'string') return data
+        if(data && typeof data.message === 'string') return data.message
+
+        return fallbackMessage
+    }
 
     function handleRegistrationForm(e){
 
         e.preventDefault();
 
+        setErrorMessage('')
+        setSuccessMessage('')
+
         const register = {name, username, email, password}
 
-        console.log(register);
-
         registerAPICall(register).then((response) => {
-            console.log(response.data);
+            setSuccessMessage(response.data || 'User registered successfully')
+            setName('')
+            setUsername('')
+            setEmail('')
+            setPassword('')
+
+            setTimeout(() => {
+                navigator('/login')
+            }, 1200)
         }).catch(error => {
+            setErrorMessage(getErrorMessage(error, 'Registration failed. Please try with different username/email.'))
             console.error(error);
         })
     }
@@ -35,6 +58,9 @@ const RegisterComponent = () => {
                     </div>
 
                     <div className='card-body'>
+                        {successMessage && <div className='alert alert-success'>{successMessage}</div>}
+                        {errorMessage && <div className='alert alert-danger'>{errorMessage}</div>}
+
                         <form>
                             <div className='row mb-3'>
                                 <label className='col-md-3 control-label'> Name </label>
