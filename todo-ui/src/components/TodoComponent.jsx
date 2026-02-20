@@ -8,6 +8,7 @@ const TodoComponent = () => {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [completed, setCompleted] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
     const { id } = useParams()
 
@@ -15,22 +16,26 @@ const TodoComponent = () => {
     function saveOrUpdateTodo(e){
         e.preventDefault()
 
+        setErrorMessage('')
+
         const todo = {title, description, completed}
-        console.log(todo);
 
         if(id){
 
-            updateTodo(id, todo).then((response) => {
+            updateTodo(id, todo).then(() => {
                 navigate('/todos')
             }).catch(error => {
+                const backendMessage = error?.response?.data?.message || error?.response?.data
+                setErrorMessage(backendMessage || 'Unable to update todo. Please try again.')
                 console.error(error);
             })
 
         }else{
-            saveTodo(todo).then((response) => {
-                console.log(response.data)
+            saveTodo(todo).then(() => {
                 navigate('/todos')
             }).catch(error => {
+                const backendMessage = error?.response?.data?.message || error?.response?.data
+                setErrorMessage(backendMessage || 'Unable to save todo. Please try again.')
                 console.error(error);
             })
         }
@@ -51,7 +56,7 @@ const TodoComponent = () => {
                 console.log(response.data)
                 setTitle(response.data.title)
                 setDescription(response.data.description)
-                setCompleted(response.data.completed)
+                setCompleted(Boolean(response.data.completed))
             }).catch(error => {
                 console.error(error);
             })
@@ -66,6 +71,8 @@ const TodoComponent = () => {
             <div className='card col-md-6 offset-md-3 offset-md-3'>
                 { pageTitle() }
                 <div className='card-body'>
+                    {errorMessage && <div className='alert alert-danger'>{errorMessage}</div>}
+
                     <form>
                         <div className='form-group mb-2'>
                             <label className='form-label'>Todo Title:</label>
@@ -98,7 +105,7 @@ const TodoComponent = () => {
                             <select
                                 className='form-control'
                                 value={completed}
-                                onChange={(e) => setCompleted(e.target.value)}
+                                onChange={(e) => setCompleted(e.target.value === 'true')}
                             >
                                 <option value="false">No</option>
                                 <option value="true">Yes</option>

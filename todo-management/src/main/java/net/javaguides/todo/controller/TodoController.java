@@ -20,7 +20,7 @@ public class TodoController {
 
     // Build Add Todo REST API
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PostMapping
     public ResponseEntity<TodoDto> addTodo(@RequestBody TodoDto todoDto){
 
@@ -47,7 +47,7 @@ public class TodoController {
     }
 
     // Build Update Todo REST API
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PutMapping("{id}")
     public ResponseEntity<TodoDto> updateTodo(@RequestBody TodoDto todoDto, @PathVariable("id") Long todoId){
         TodoDto updatedTodo = todoService.updateTodo(todoDto, todoId);
@@ -55,7 +55,7 @@ public class TodoController {
     }
 
     // Build Delete Todo REST API
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteTodo(@PathVariable("id") Long todoId){
         todoService.deleteTodo(todoId);
