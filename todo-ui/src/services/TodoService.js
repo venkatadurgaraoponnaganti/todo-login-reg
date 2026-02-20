@@ -10,8 +10,11 @@ const BASE_REST_API_URL = `${API_BASE}/todos`;
 
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
-    
-    config.headers['Authorization'] = getToken();
+    const token = getToken();
+
+    if (token) {
+      config.headers['Authorization'] = token.startsWith('Basic ') ? token : `Basic ${token}`;
+    }
 
     return config;
   }, function (error) {
