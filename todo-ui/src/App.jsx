@@ -15,7 +15,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter basename="/api">
+    <BrowserRouter>
       <HeaderComponent />
 
       <Routes>
