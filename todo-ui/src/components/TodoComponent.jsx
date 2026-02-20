@@ -113,7 +113,7 @@ const TodoComponent = () => {
                             </select>
                         </div>
 
-                        <button className='btn btn-success' onClick={ (e) => saveOrUpdateTodo(e)}>Submit</button>
+                        <button type='submit' className='btn btn-success'>Submit</button>
                     </form>
 
                 </div>
