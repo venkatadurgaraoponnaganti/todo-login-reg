@@ -3,11 +3,14 @@ import { completeTodo, deleteTodo, getAllTodos, inCompleteTodo } from '../servic
 import { useNavigate } from 'react-router-dom'
 
 const ListTodoComponent = () => {
+  const [todos, setTodos] = useState([])
+  const [errorMessage, setErrorMessage] = useState('')
 
     const [todos, setTodos] = useState([])
     const [errorMessage, setErrorMessage] = useState('')
 
-    const navigate = useNavigate()
+  function getErrorMessage(error, fallbackMessage) {
+    const data = error?.response?.data
 
     function getErrorMessage(error, fallbackMessage){
         const data = error?.response?.data
@@ -39,36 +42,82 @@ const ListTodoComponent = () => {
     function addNewTodo(){
         navigate('/add-todo')
 
+  function normalizeTodo(item, index) {
+    if (!item || typeof item !== 'object') {
+      return null
     }
 
-    function updateTodo(id){
-        console.log(id)
-        navigate(`/update-todo/${id}`)
+    return {
+      id: item.id ?? `todo-${index}`,
+      title: typeof item.title === 'string' ? item.title : String(item.title ?? ''),
+      description:
+        typeof item.description === 'string'
+          ? item.description
+          : String(item.description ?? ''),
+      completed: Boolean(item.completed)
     }
-    
-    function removeTodo(id){
-        deleteTodo(id).then((response) => {
-            listTodos();
-        }).catch(error => {
-            console.error(error)
-        })
-    }
+  }
 
-    function markCompleteTodo(id){
-        completeTodo(id).then((response) => {
-            listTodos()
-        }).catch(error => {
-            console.error(error)
-        })
-    }
+  useEffect(() => {
+    listTodos()
+  }, [])
 
-    function markInCompleteTodo(id){
-        inCompleteTodo(id).then((response) => {
-            listTodos();
-        }).catch(error => {
-            console.error(error)
-        })
-    }
+  function listTodos() {
+    setErrorMessage('')
+
+    getAllTodos()
+      .then((response) => {
+        const list = Array.isArray(response.data) ? response.data : []
+        const normalizedTodos = list
+          .map((todo, index) => normalizeTodo(todo, index))
+          .filter(Boolean)
+
+        setTodos(normalizedTodos)
+      })
+      .catch((error) => {
+        setErrorMessage(getErrorMessage(error, 'Unable to load todos. Please login again.'))
+        setTodos([])
+        console.error(error)
+      })
+  }
+
+  function addNewTodo() {
+    navigate('/add-todo')
+  }
+
+  function updateTodo(id) {
+    navigate(`/update-todo/${id}`)
+  }
+
+  function removeTodo(id) {
+    deleteTodo(id)
+      .then(() => {
+        listTodos()
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  function markCompleteTodo(id) {
+    completeTodo(id)
+      .then(() => {
+        listTodos()
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  function markInCompleteTodo(id) {
+    inCompleteTodo(id)
+      .then(() => {
+        listTodos()
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
 
   return (
     <div className='container'>
