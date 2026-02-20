@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 const ListTodoComponent = () => {
 
     const [todos, setTodos] = useState([])
+    const [errorMessage, setErrorMessage] = useState('')
 
     const navigate = useNavigate()
 
@@ -14,9 +15,14 @@ const ListTodoComponent = () => {
     }, [])
     
     function listTodos(){
+        setErrorMessage('')
+
         getAllTodos().then((response) => {
-            setTodos(response.data);
+            setTodos(Array.isArray(response.data) ? response.data : [])
         }).catch(error => {
+            const backendMessage = error?.response?.data?.message || error?.response?.data
+            setErrorMessage(backendMessage || 'Unable to load todos. Please login again.')
+            setTodos([])
             console.error(error);
         })
     }
@@ -59,6 +65,7 @@ const ListTodoComponent = () => {
     <div className='container'>
         <h2 className='text-center'>List of Todos</h2>
         <button className='btn btn-primary mb-2' onClick={addNewTodo}>Add Todo</button>
+        {errorMessage && <div className='alert alert-danger'>{errorMessage}</div>}
         <div>
             <table className='table table-bordered table-striped'>
                 <thead>
